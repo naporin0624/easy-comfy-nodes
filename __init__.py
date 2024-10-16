@@ -1,5 +1,8 @@
 import requests
 import base64
+import random
+import string
+import time
 import io
 import os
 import numpy as np
@@ -174,7 +177,7 @@ class S3Upload:
         return {
             "required": {
                 "endpoint_url": ("STRING", {"default": ""}),
-                "filenames": ("VHS_FILENAMES",),
+                "file_path": ("STRING",),
                 "s3_bucket": ("STRING", {"default": ""}),
                 "s3_object_name": ("STRING", {"default": "default/result.webp"}),
                 "region_name": ("STRING", {"default": "auto"}),
@@ -182,7 +185,7 @@ class S3Upload:
         }
 
     RETURN_TYPES = ("STRING","STRING","STRING","STRING")
-    RETURN_NAMES = ("image_s3_url","movie_s3_url","image_s3_object_name","movie_s3_object_name")
+    RETURN_NAMES = ("image_s3_url","object_name")
     OUTPUT_NODE = True
     CATEGORY = "Video"
     FUNCTION = "execute"
@@ -190,30 +193,22 @@ class S3Upload:
     def execute(
         self,
         endpoint_url="",
-        filenames=(),
+        file_path="",
         s3_bucket="",
         s3_object_name="",
         region_name="auto",
     ):
         s3 = boto3.resource('s3', endpoint_url=endpoint_url, region_name=region_name)
 
-        image_file = filenames[1][0]
-        image_ext = os.path.splitext(image_file)[1]
-        image_s3_object_name = f"{s3_object_name}{image_ext}"
+        file_ext = os.path.splitext(file_path)[1]
+        if not s3_object_name.endswith(file_ext):
+            s3_object_name = f"{s3_object_name}{file_ext}"
 
-        s3.Bucket(s3_bucket).upload_file(image_file, image_s3_object_name)
-        image_s3url = f's3://{s3_bucket}/{image_s3_object_name}'
-        print(f'Uploading image file to {image_s3url}')
+        s3.Bucket(s3_bucket).upload_file(file_path, s3_object_name)
+        s3url = f's3://{s3_bucket}/{s3_object_name}'
+        print(f'Uploading image file to {s3url}')
 
-        video_file = filenames[1][1]
-        video_ext = os.path.splitext(video_file)[1]
-        video_s3_object_name = f"{s3_object_name}{video_ext}"
-
-        s3.Bucket(s3_bucket).upload_file(video_file, video_s3_object_name)
-        video_s3url = f's3://{s3_bucket}/{video_s3_object_name}'
-        print(f'Uploading video file to {video_s3url}')
-
-        return (image_s3url,video_s3url,image_s3_object_name,video_s3_object_name)
+        return (s3url,s3_object_name)
 
 
 class RemoveImageBackground:
@@ -252,6 +247,55 @@ class RemoveImageBackground:
 
         return (image,imageWithAlpha)
 
+
+class RandomStringNode:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required": {"length": ("INT", {"default": 8})}}
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("random_string",)
+    FUNCTION = "execute"
+    CATEGORY = "String"
+
+    def execute(self, length):
+        random_string = ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+        return (random_string,)
+
+class TimestampStringNode:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required": {}}
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("timestamp",)
+    FUNCTION = "execute"
+    CATEGORY = "String"
+
+    def execute(self):
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        return (timestamp,)
+
+class StringConcatNode:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required": {
+                "string1": ("STRING", {"default": ""}),
+                "string2": ("STRING", {"default": ""}),
+                "delimiter": ("STRING", {"default": ","}),
+            }
+        }
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("concatenated_string",)
+    FUNCTION = "execute"
+    CATEGORY = "String"
+
+    def execute(self, string1, string2, delimiter):
+        concatenated_string = f"{string1}{delimiter}{string2}"
+        return (concatenated_string,)
+
 NODE_CLASS_MAPPINGS = {
     "EZHttpPostNode": HttpPostNode,
     "EZEmptyDictNode": EmptyDictNode,
@@ -261,7 +305,10 @@ NODE_CLASS_MAPPINGS = {
     "EZLoadImgFromUrlNode": LoadImageFromUrlNode,
     "EZLoadImgBatchFromUrlsNode": LoadImagesFromUrlsNode,
     "EZS3Uploader": S3Upload,
-    "EZRemoveImgBackground": RemoveImageBackground
+    "EZRemoveImgBackground": RemoveImageBackground,
+    "EZRandomStringNode": RandomStringNode,
+    "EZTimestampStringNode": TimestampStringNode,
+    "EZStringConcatNode": StringConcatNode,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -273,5 +320,8 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "EZLoadImgFromUrlNode": "Load Img From URL (EZ)",
     "EZLoadImgBatchFromUrlsNode": "Load Img Batch From URLs (EZ)",
     "EZS3Uploader": "S3 Upload (EZ)",
-    "EZRemoveImgBackground": "Remove Img Background (EZ)"
+    "EZRemoveImgBackground": "Remove Img Background (EZ)",
+    "EZRandomStringNode": "Random String(EZ)",
+    "EZTimestampStringNode": "Timestamp String(EZ)",
+    "EZStringConcatNode": "String Concat(EZ)",
 }
