@@ -181,7 +181,7 @@ class S3Upload:
             }
         }
 
-    RETURN_TYPES = ("STRING","STRING")
+    RETURN_TYPES = ("STRING","STRING","STRING","STRING")
     RETURN_NAMES = ("image_s3_url","movie_s3_url","image_s3_object_name","movie_s3_object_name")
     OUTPUT_NODE = True
     CATEGORY = "Video"
