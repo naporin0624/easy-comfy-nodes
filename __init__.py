@@ -1,6 +1,7 @@
 import requests
 import base64
 import io
+import os
 import numpy as np
 from PIL import Image, ImageOps
 import torch
@@ -181,7 +182,7 @@ class S3Upload:
         }
 
     RETURN_TYPES = ("STRING","STRING")
-    RETURN_NAMES = ("s3_url","object_name")
+    RETURN_NAMES = ("image_s3_url","movie_s3_url","image_s3_object_name","movie_s3_object_name")
     OUTPUT_NODE = True
     CATEGORY = "Video"
     FUNCTION = "execute"
@@ -195,10 +196,25 @@ class S3Upload:
         region_name="auto",
     ):
         s3 = boto3.resource('s3', endpoint_url=endpoint_url, region_name=region_name)
-        s3.Bucket(s3_bucket).upload_file(filenames[1][1], s3_object_name)
-        s3url = f's3://{s3_bucket}/{s3_object_name}'
-        print(f'Uploading file to {s3url}', filenames)
-        return (s3url,s3_object_name)
+
+        image_file = filenames[1][0]
+        image_ext = os.path.splitext(image_file)[1]
+        image_s3_object_name = f"{s3_object_name}{image_ext}"
+
+        s3.Bucket(s3_bucket).upload_file(image_file, image_s3_object_name)
+        image_s3url = f's3://{s3_bucket}/{image_s3_object_name}'
+        print(f'Uploading image file to {image_s3url}')
+
+        video_file = filenames[1][1]
+        video_ext = os.path.splitext(video_file)[1]
+        video_s3_object_name = f"{s3_object_name}{video_ext}"
+
+        s3.Bucket(s3_bucket).upload_file(video_file, video_s3_object_name)
+        video_s3url = f's3://{s3_bucket}/{video_s3_object_name}'
+        print(f'Uploading video file to {video_s3url}')
+
+        return (image_s3url, video_s3url,image_s3_object_name,video_s3_object_name)
+
 
 class RemoveImageBackground:
     @classmethod
