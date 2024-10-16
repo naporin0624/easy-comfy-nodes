@@ -172,29 +172,33 @@ class S3Upload:
     def INPUT_TYPES(s):
         return {
             "required": {
+                "endpoint_url": ("STRING", {"default": ""}),
                 "filenames": ("VHS_FILENAMES",),
                 "s3_bucket": ("STRING", {"default": ""}),
                 "s3_object_name": ("STRING", {"default": "default/result.webp"}),
+                "region_name": ("STRING", {"default": "auto"}),
             }
         }
 
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("s3_url",)
+    RETURN_TYPES = ("STRING","STRING")
+    RETURN_NAMES = ("s3_url","object_name")
     OUTPUT_NODE = True
     CATEGORY = "Video"
     FUNCTION = "execute"
 
     def execute(
         self,
+        endpoint_url="",
         filenames=(),
         s3_bucket="",
         s3_object_name="",
+        region_name="auto",
     ):
-        s3 = boto3.resource('s3')
+        s3 = boto3.resource('s3', endpoint_url=endpoint_url, region_name=region_name)
         s3.Bucket(s3_bucket).upload_file(filenames[1][1], s3_object_name)
         s3url = f's3://{s3_bucket}/{s3_object_name}'
         print(f'Uploading file to {s3url}')
-        return (s3url,)
+        return (s3url,s3_object_name)
 
 class RemoveImageBackground:
     @classmethod

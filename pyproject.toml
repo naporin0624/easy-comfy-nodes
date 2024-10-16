@@ -3,7 +3,13 @@ name = "easy-comfy-nodes"
 description = "A collection of utility nodes primarily for interacting with comfy via automated systems"
 version = "2.0.0"
 license = { text = "MIT License" }
-dependencies = ["requests", "boto3", "rembg", "pillow-avif-plugin", "pillow-heif"]
+dependencies = [
+    "requests",
+    "boto3",
+    "rembg",
+    "pillow-avif-plugin",
+    "pillow-heif",
+]
 
 [project.urls]
 Repository = "https://github.com/wmatson/easy-comfy-nodes"
@@ -13,3 +19,8 @@ Repository = "https://github.com/wmatson/easy-comfy-nodes"
 PublisherId = "wmatson"
 DisplayName = "easy-comfy-nodes"
 Icon = ""
+
+[tool.uv]
+dev-dependencies = [
+    "python-dotenv>=1.0.1",
+]
