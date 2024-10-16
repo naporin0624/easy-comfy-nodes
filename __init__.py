@@ -197,7 +197,7 @@ class S3Upload:
         s3 = boto3.resource('s3', endpoint_url=endpoint_url, region_name=region_name)
         s3.Bucket(s3_bucket).upload_file(filenames[1][1], s3_object_name)
         s3url = f's3://{s3_bucket}/{s3_object_name}'
-        print(f'Uploading file to {s3url}')
+        print(f'Uploading file to {s3url}', filenames)
         return (s3url,s3_object_name)
 
 class RemoveImageBackground:
