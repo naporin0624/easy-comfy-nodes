@@ -213,7 +213,7 @@ class S3Upload:
         video_s3url = f's3://{s3_bucket}/{video_s3_object_name}'
         print(f'Uploading video file to {video_s3url}')
 
-        return (image_s3url, video_s3url,image_s3_object_name,video_s3_object_name)
+        return (image_s3url,video_s3url,image_s3_object_name,video_s3_object_name)
 
 
 class RemoveImageBackground:
