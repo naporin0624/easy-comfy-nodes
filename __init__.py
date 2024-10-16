@@ -11,7 +11,6 @@ import torch
 import boto3
 import rembg
 import comfy
-import pillow_avif
 
 from pillow_heif import register_heif_opener
 register_heif_opener()
@@ -210,7 +209,6 @@ class S3Upload:
 
         return (s3url,s3_object_name)
 
-
 class RemoveImageBackground:
     @classmethod
     def INPUT_TYPES(s):
@@ -246,7 +244,6 @@ class RemoveImageBackground:
         imageWithAlpha = torch.from_numpy(imageWithAlpha)[None,]
 
         return (image,imageWithAlpha)
-
 
 class RandomStringNode:
     @classmethod

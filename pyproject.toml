@@ -1,5 +1,5 @@
 [project]
-name = "easy-comfy-nodes"
+name = "easy-comfy-nodes-next"
 description = "A collection of utility nodes primarily for interacting with comfy via automated systems"
 version = "2.0.0"
 license = { text = "MIT License" }
@@ -12,12 +12,12 @@ dependencies = [
 ]
 
 [project.urls]
-Repository = "https://github.com/wmatson/easy-comfy-nodes"
+Repository = "https://github.com/naporin0624/easy-comfy-nodes"
 #  Used by Comfy Registry https://comfyregistry.org
 
 [tool.comfy]
-PublisherId = "wmatson"
-DisplayName = "easy-comfy-nodes"
+PublisherId = "naporin0624"
+DisplayName = "easy-comfy-nodes-next"
 Icon = ""
 
 [tool.uv]
