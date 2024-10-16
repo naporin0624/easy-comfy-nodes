@@ -184,7 +184,7 @@ class S3Upload:
             }
         }
 
-    RETURN_TYPES = ("STRING","STRING","STRING","STRING")
+    RETURN_TYPES = ("STRING","STRING")
     RETURN_NAMES = ("image_s3_url","object_name")
     OUTPUT_NODE = True
     CATEGORY = "Video"
@@ -273,7 +273,7 @@ class TimestampStringNode:
     CATEGORY = "String"
 
     def execute(self):
-        timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        timestamp = str(int(time.time()))
         return (timestamp,)
 
 class StringConcatNode:
