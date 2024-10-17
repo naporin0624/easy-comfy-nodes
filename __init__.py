@@ -327,6 +327,7 @@ NODE_CLASS_MAPPINGS = {
     "EZRandomStringNode": RandomStringNode,
     "EZTimestampStringNode": TimestampStringNode,
     "EZStringConcatNode": StringConcatNode,
+    "EZPrintText": PrintText,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -342,4 +343,5 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "EZRandomStringNode": "Random String(EZ)",
     "EZTimestampStringNode": "Timestamp String(EZ)",
     "EZStringConcatNode": "String Concat(EZ)",
+    "EZPrintText": "Print Text",
 }
