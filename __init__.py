@@ -255,19 +255,27 @@ class RandomStringNode:
     FUNCTION = "execute"
     CATEGORY = "String"
 
+    @classmethod
+    def IS_CHANGED(self, length):
+        return self.execute(length)[0]
+
     def execute(self, length):
         random_string = ''.join(random.choices(string.ascii_letters + string.digits, k=length))
         return (random_string,)
 
 class TimestampStringNode:
-    @classmethod
-    def INPUT_TYPES(s):
-        return {"required": {}}
-
     RETURN_TYPES = ("STRING",)
     RETURN_NAMES = ("timestamp",)
     FUNCTION = "execute"
     CATEGORY = "String"
+
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required": {}}
+
+    @classmethod
+    def IS_CHANGED(self):
+        return self.execute()[0]
 
     def execute(self):
         timestamp = str(int(time.time()))
@@ -294,26 +302,6 @@ class StringConcatNode:
         return (concatenated_string,)
 
 
-class PrintText:
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                    "text": ("STRING", {"multiline": True, "default": "Hello World"}),
-                }
-            }
-
-    RETURN_TYPES = ()
-    FUNCTION = "print_text"
-    OUTPUT_NODE = True
-    CATEGORY = "🧩 Tutorial Nodes"
-
-    def print_text(self, text):
-
-        print(text)
-
-        return {}
-
 NODE_CLASS_MAPPINGS = {
     "EZHttpPostNode": HttpPostNode,
     "EZEmptyDictNode": EmptyDictNode,
@@ -327,7 +315,6 @@ NODE_CLASS_MAPPINGS = {
     "EZRandomStringNode": RandomStringNode,
     "EZTimestampStringNode": TimestampStringNode,
     "EZStringConcatNode": StringConcatNode,
-    "EZPrintText": PrintText,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -343,5 +330,4 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "EZRandomStringNode": "Random String(EZ)",
     "EZTimestampStringNode": "Timestamp String(EZ)",
     "EZStringConcatNode": "String Concat(EZ)",
-    "EZPrintText": "Print Text",
 }
