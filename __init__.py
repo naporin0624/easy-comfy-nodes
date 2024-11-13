@@ -176,7 +176,7 @@ class S3Upload:
         return {
             "required": {
                 "endpoint_url": ("STRING", {"default": ""}),
-                "file_path": ("STRING",),
+                "file_path": ("STRING", {"default": ""}),
                 "s3_bucket": ("STRING", {"default": ""}),
                 "s3_object_name": ("STRING", {"default": "default/result.webp"}),
                 "region_name": ("STRING", {"default": "auto"}),
